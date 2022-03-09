@@ -5,6 +5,6 @@
   "license": "MIT",
   "dependencies": {
     "@mapbox/togeojson": "^0.16.0",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.7"
   }
 }
