@@ -1,0 +1,47 @@
+service: inreach-feed-geojson
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ap-southeast-2
+  tracing:
+    apiGateway: true
+    lambda: true
+
+functions:
+  hello:
+    handler: handler.inreach
+    events:
+      - http:
+          path: inreach
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+    environment:
+      GARMIN_MAPSHARE_URL: ${ssm:/inreach-feed-geojson/garmin_mapshare_url}
+      GARMIN_MAPSHARE_USERNAME: ${ssm:/inreach-feed-geojson/garmin_mapshare_username}
+      GARMIN_MAPSHARE_PASSWORD: ${ssm:/inreach-feed-geojson/garmin_mapshare_password~true}
+
+resources:
+  Resources:
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+          gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+

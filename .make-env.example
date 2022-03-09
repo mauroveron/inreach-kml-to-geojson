@@ -1,0 +1,4 @@
+# If you're using aws-vault, uncomment the following and replace myprofile
+# with your profile name
+# AWS_PREFIX=aws-vault exec myprofile --
+
